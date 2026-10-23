@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shree Krishna in the Celestial Garden</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #02040b;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #f8fafc;
+            user-select: none;
+        }
+
+        #canvas-bg, #canvas-fg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        #canvas-bg { z-index: 1; }
+        #scene-container {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        #canvas-fg { z-index: 4; }
+
+        /* Typography Header */
+        .title-badge {
+            position: absolute;
+            top: 2.5rem;
+            left: 3rem;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .mantra-tag {
+            font-size: 0.72rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: #fde047;
+            font-weight: 600;
+            background: rgba(253, 224, 71, 0.12);
+            border: 1px solid rgba(253, 224, 71, 0.35);
+            padding: 0.35rem 1rem;
+            border-radius: 9999px;
+            backdrop-filter: blur(10px);
+            display: inline-block;
+            margin-bottom: 0.7rem;
+            box-shadow: 0 0 20px rgba(253, 224, 71, 0.2);
+        }
+
+        h1 {
+            font-family: 'Cinzel Decorative', 'Cormorant Garamond', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1.15;
+            background: linear-gradient(135deg, #ffffff 30%, #bae6fd 70%, #fde047 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 35px rgba(56, 189, 248, 0.45);
+        }
+
+        p.subtext {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-style: italic;
+            color: #93c5fd;
+            margin-top: 0.4rem;
+            letter-spacing: 0.04em;
+        }
+
+        /* SVG Scene Wrapper */
+        .scene-svg {
+            width: 100%;
+            height: 100%;
+            max-width: 1400px;
+            max-height: 950px;
+            overflow: visible;
+        }
+
+        /* Animations for Krishna */
+        @keyframes subtleBreathe {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-3.5px) rotate(0.3deg); }
+        }
+
+        @keyframes featherWaver {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(3.5deg) skewX(2deg); }
+        }
+
+        @keyframes fluteGlowPulse {
+            0%, 100% { opacity: 0.55; transform: scale(1); }
+            50% { opacity: 0.95; transform: scale(1.18); }
+        }
+
+        @keyframes flowerSwayLeft {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(-3.5deg); }
+        }
+
+        @keyframes flowerSwayRight {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(4deg); }
+        }
+
+        @keyframes robeFlutter {
+            0%, 100% { transform: skewX(0deg) scaleX(1); }
+            50% { transform: skewX(-2deg) scaleX(1.03); }
+        }
+
+        .krishna-body {
+            transform-origin: 50% 90%;
+            animation: subtleBreathe 5.5s ease-in-out infinite;
+        }
+
+        .feather-group {
+            transform-origin: 395px 145px;
+            animation: featherWaver 4s ease-in-out infinite;
+        }
+
+        .flute-aura {
+            transform-origin: 520px 290px;
+            animation: fluteGlowPulse 2.8s ease-in-out infinite;
+        }
+
+        .sway-left {
+            transform-origin: bottom center;
+            animation: flowerSwayLeft 6s ease-in-out infinite;
+        }
+
+        .sway-right {
+            transform-origin: bottom center;
+            animation: flowerSwayRight 7s ease-in-out infinite;
+        }
+
+        .robe-flutter {
+            transform-origin: 360px 480px;
+            animation: robeFlutter 5s ease-in-out infinite;
+        }
+
+        @media (max-width: 768px) {
+            .title-badge { top: 1.5rem; left: 1.5rem; }
+            h1 { font-size: 1.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="title-badge">
+        <span class="mantra-tag">✦ रास रङ्ग • Celestial Vrindavan</span>
+        <h1>Shree Krishna</h1>
+        <p class="subtext">In the moonlit sanctuary of blooming sunflowers, velvet roses & wild blossoms</p>
+    </div>
+
+    <!-- Sky / Stars Canvas -->
+    <canvas id="canvas-bg"></canvas>
+
+    <!-- Detailed Vector Art for Krishna & Garden -->
+    <div id="scene-container">
+        <svg class="scene-svg" viewBox="0 0 1000 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <!-- Skin Gradients (Shyamasundara celestial blue) -->
+                <radialGradient id="krishnaSkin" cx="40%" cy="35%" r="65%">
+                    <stop offset="0%" stop-color="#93C5FD"/>
+                    <stop offset="45%" stop-color="#60A5FA"/>
+                    <stop offset="85%" stop-color="#2563EB"/>
+                    <stop offset="100%" stop-color="#1D4ED8"/>
+                </radialGradient>
+
+                <linearGradient id="bodyShade" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#60A5FA"/>
+                    <stop offset="100%" stop-color="#1E40AF"/>
+                </linearGradient>
+
+                <!-- Pitambara (Golden Robes) -->
+                <linearGradient id="goldSilk" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#FEF08A"/>
+                    <stop offset="35%" stop-color="#FACC15"/>
+                    <stop offset="75%" stop-color="#EAB308"/>
+                    <stop offset="100%" stop-color="#CA8A04"/>
+                </linearGradient>
+
+                <linearGradient id="redBorder" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#DC2626"/>
+                    <stop offset="100%" stop-color="#991B1B"/>
+                </linearGradient>
+
+                <!-- Crown & Jewelry Gold -->
+                <linearGradient id="jewelGold" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#FFFBEB"/>
+                    <stop offset="40%" stop-color="#FCD34D"/>
+                    <stop offset="80%" stop-color="#D97706"/>
+                    <stop offset="100%" stop-color="#78350F"/>
+                </linearGradient>
+
+                <!-- Divine Halo Radial Glow -->
+                <radialGradient id="divineHalo" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#FEF08A" stop-opacity="0.75"/>
+                    <stop offset="30%" stop-color="#67E8F9" stop-opacity="0.45"/>
+                    <stop offset="60%" stop-color="#3B82F6" stop-opacity="0.2"/>
+                    <stop offset="100%" stop-color="#1E1B4B" stop-opacity="0"/>
+                </radialGradient>
+
+                <!-- Peacock Feather Gradients -->
+                <radialGradient id="featherEye" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#38BDF8"/>
+                    <stop offset="35%" stop-color="#0284C7"/>
+                    <stop offset="60%" stop-color="#059669"/>
+                    <stop offset="85%" stop-color="#D97706"/>
+                    <stop offset="100%" stop-color="#064E3B"/>
+                </radialGradient>
+
+                <!-- Sunflower Gradient -->
+                <radialGradient id="sunflowerEye" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#1C120C"/>
+                    <stop offset="60%" stop-color="#451A03"/>
+                    <stop offset="90%" stop-color="#78350F"/>
+                    <stop offset="100%" stop-color="#D97706"/>
+                </radialGradient>
+
+                <linearGradient id="sunPetal" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#FEF08A"/>
+                    <stop offset="40%" stop-color="#FBBF24"/>
+                    <stop offset="100%" stop-color="#D97706"/>
+                </linearGradient>
+
+                <!-- Velvet Rose Gradient -->
+                <radialGradient id="roseRed" cx="40%" cy="40%" r="60%">
+                    <stop offset="0%" stop-color="#FB7185"/>
+                    <stop offset="40%" stop-color="#E11D48"/>
+                    <stop offset="75%" stop-color="#9F1239"/>
+                    <stop offset="100%" stop-color="#4C0519"/>
+                </radialGradient>
+
+                <!-- Hill / Garden Base -->
+                <linearGradient id="hillGreen" x1="50%" y1="0%" x2="50%" y2="100%">
+                    <stop offset="0%" stop-color="#06281E"/>
+                    <stop offset="50%" stop-color="#031510"/>
+                    <stop offset="100%" stop-color="#010604"/>
+                </linearGradient>
+            </defs>
+
+            <!-- Background Hill & Meadow -->
+            <path d="M-100 800 Q 250 560 500 620 T 1100 680 L 1100 800 Z" fill="url(#hillGreen)"/>
+            <path d="M-50 800 Q 300 640 680 610 T 1050 800 Z" fill="#02100B" opacity="0.85"/>
+
+            <!-- ================= KRISHNA COMPLETE FIGURE ================= -->
+            <g class="krishna-body" id="krishna-layer">
+
+                <!-- 1. Aura / Halo (Prabhavali) Behind Head -->
+                <circle cx="410" cy="225" r="150" fill="url(#divineHalo)"/>
+                <circle cx="410" cy="225" r="95" stroke="#FDE047" stroke-width="1.2" stroke-dasharray="4 6" opacity="0.6"/>
+
+                <!-- 2. Dark Silken Tresses (Curly Hair) -->
+                <g fill="#0B132B">
+                    <circle cx="365" cy="215" r="32"/>
+                    <circle cx="360" cy="245" r="28"/>
+                    <circle cx="370" cy="275" r="24"/>
+                    <circle cx="455" cy="215" r="32"/>
+                    <circle cx="465" cy="245" r="28"/>
+                    <circle cx="455" cy="275" r="24"/>
+                    <path d="M 370 190 Q 410 160 450 190 Q 455 240 435 255 Q 410 240 380 255 Z"/>
+                </g>
+
+                <!-- 3. Legs in Tribhanga (Gracefully Crossed) -->
+                <!-- Back Leg (Left) standing firm -->
+                <path d="M 395 520 C 400 580 405 640 405 700 C 405 708 395 712 390 714 C 385 715 382 710 382 702 C 385 645 382 585 380 520 Z" fill="url(#bodyShade)"/>
+                <!-- Front Leg (Right) bent gracefully across -->
+                <path d="M 430 520 C 440 570 425 615 375 660 C 365 670 355 690 355 706 C 355 712 365 714 372 710 C 390 690 440 645 448 570 C 452 540 445 525 430 520 Z" fill="url(#krishnaSkin)"/>
+                <!-- Lotus Feet with Golden Anklets (Nupur) -->
+                <ellipse cx="388" cy="710" rx="14" ry="6" fill="#F472B6" opacity="0.7"/>
+                <ellipse cx="362" cy="708" rx="14" ry="6" fill="#F472B6" opacity="0.75"/>
+                <!-- Golden Anklets -->
+                <path d="M 382 698 Q 395 700 408 697" stroke="url(#jewelGold)" stroke-width="4.5" stroke-linecap="round"/>
+                <path d="M 353 695 Q 365 697 376 693" stroke="url(#jewelGold)" stroke-width="4.5" stroke-linecap="round"/>
+
+                <!-- 4. Pitambara (Golden Saffron Silk Dhoti) -->
+                <g>
+                    <path d="M 360 440 C 355 490 340 550 365 590 C 390 625 450 610 475 560 C 495 520 480 460 465 440 Z" fill="url(#goldSilk)"/>
+                    <!-- Pleats & Folds -->
+                    <path d="M 405 440 C 410 480 415 540 405 610 C 415 570 430 510 425 440" stroke="#B45309" stroke-width="2.5" fill="none"/>
+                    <path d="M 385 450 C 375 500 370 540 380 585" stroke="#B45309" stroke-width="2" fill="none"/>
+                    <path d="M 445 450 C 455 495 458 535 450 575" stroke="#B45309" stroke-width="2" fill="none"/>
+                    <!-- Ornate Red Embroidered Borders -->
+                    <path d="M 370 595 Q 420 625 470 565" stroke="url(#redBorder)" stroke-width="5" fill="none"/>
+                    <!-- Waist Sash (Kamarbandh) & Dangling Jewels -->
+                    <path d="M 360 445 Q 410 465 465 445" stroke="url(#jewelGold)" stroke-width="8" fill="none"/>
+                    <path d="M 385 455 Q 410 485 435 455" stroke="url(#jewelGold)" stroke-width="4" fill="none"/>
+                    <circle cx="410" cy="485" r="4" fill="#EF4444"/>
+                    <!-- Flowing Dupatta (Side Scarf in Wind) -->
+                    <path class="robe-flutter" d="M 465 445 C 500 460 545 495 560 540 C 570 575 545 615 530 635 C 540 605 548 570 535 540 C 518 505 480 475 465 455 Z" fill="url(#goldSilk)"/>
+                </g>
+
+                <!-- 5. Torso and Shoulders (Syamasundara Tone) -->
+                <path d="M 370 320 C 355 350 355 400 365 445 C 390 455 435 455 460 445 C 470 400 470 350 455 320 C 435 305 390 305 370 320 Z" fill="url(#krishnaSkin)"/>
+
+                <!-- 6. Floral Garland (Vanamala) & Pearl Necklaces -->
+                <g>
+                    <!-- Yajnopavita (Sacred Thread) -->
+                    <path d="M 390 315 C 385 365 420 420 435 450" stroke="#FEF08A" stroke-width="1.4" opacity="0.85" fill="none"/>
+                    <!-- Pearl Choker -->
+                    <path d="M 390 310 Q 410 322 430 310" stroke="#FFFFFF" stroke-width="3" stroke-dasharray="2 4" fill="none"/>
+                    <circle cx="410" cy="320" r="5" fill="#EF4444"/>
+                    <!-- Long Vanamala Garland of Forest Flowers & Tulsi -->
+                    <path d="M 375 315 C 360 380 365 470 410 520 C 455 470 465 380 448 315" stroke="#FFFFFF" stroke-width="7" stroke-dasharray="6 8" fill="none"/>
+                    <path d="M 375 315 C 360 380 365 470 410 520 C 455 470 465 380 448 315" stroke="#F59E0B" stroke-width="5" stroke-dasharray="4 10" fill="none"/>
+                    <path d="M 375 315 C 360 380 365 470 410 520 C 455 470 465 380 448 315" stroke="#10B981" stroke-width="3" stroke-dasharray="2 12" fill="none"/>
+                </g>
+
+                <!-- 7. Neck & Face -->
+                <path d="M 395 270 L 392 315 Q 410 322 428 315 L 425 270 Z" fill="url(#krishnaSkin)"/>
+                <!-- Face Contour -->
+                <path d="M 376 220 C 372 260 395 288 410 290 C 425 288 448 260 444 220 C 442 185 378 185 376 220 Z" fill="url(#krishnaSkin)"/>
+
+                <!-- Facial Features -->
+                <!-- Lips curved in tranquil gentle smile -->
+                <path d="M 402 264 Q 410 270 418 264" stroke="#E11D48" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+                <path d="M 404 263 Q 410 267 416 263" stroke="#FDA4AF" stroke-width="1.2" fill="none"/>
+
+                <!-- Nose -->
+                <path d="M 410 232 L 407 252 Q 410 255 413 252" stroke="#3B82F6" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+
+                <!-- Lotus Eyes & Brows (Serene, downcast towards flute) -->
+                <!-- Left Eye -->
+                <path d="M 388 226 Q 396 221 403 227 Q 395 233 388 226 Z" fill="#0F172A"/>
+                <circle cx="396" cy="226" r="1" fill="#FFFFFF"/>
+                <path d="M 386 222 Q 395 217 404 222" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+
+                <!-- Right Eye -->
+                <path d="M 416 227 Q 423 221 432 226 Q 424 233 416 227 Z" fill="#0F172A"/>
+                <circle cx="424" cy="226" r="1" fill="#FFFFFF"/>
+                <path d="M 415 222 Q 424 217 433 222" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+
+                <!-- Sacred Tilak (Urdhva Pundra with central Kumkum) -->
+                <path d="M 407 192 L 407 220 Q 410 223 413 220 L 413 192 Z" fill="#FEF08A"/>
+                <line x1="410" y1="195" x2="410" y2="221" stroke="#EF4444" stroke-width="1.4"/>
+                <circle cx="410" cy="224" r="1.5" fill="#EF4444"/>
+
+                <!-- Golden Earrings (Kundalas in form of makara) -->
+                <circle cx="372" cy="245" r="5" fill="url(#jewelGold)"/>
+                <circle cx="448" cy="245" r="5" fill="url(#jewelGold)"/>
+                <path d="M 372 250 L 370 262" stroke="url(#jewelGold)" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M 448 250 L 450 262" stroke="url(#jewelGold)" stroke-width="2.5" stroke-linecap="round"/>
+
+                <!-- 8. Arms and Hands Holding Bansuri (Golden Flute) -->
+                <!-- Left Arm crossing inward -->
+                <path d="M 370 325 C 340 345 340 375 390 330 C 405 318 420 305 440 295" stroke="url(#krishnaSkin)" stroke-width="15" stroke-linecap="round" fill="none"/>
+                <!-- Right Arm holding opposite side -->
+                <path d="M 450 325 C 475 345 470 370 425 320" stroke="url(#krishnaSkin)" stroke-width="14" stroke-linecap="round" fill="none"/>
+
+                <!-- Golden Armlets & Bangles (Keyur & Kankan) -->
+                <ellipse cx="355" cy="345" rx="5" ry="9" fill="url(#jewelGold)"/>
+                <ellipse cx="465" cy="345" rx="5" ry="9" fill="url(#jewelGold)"/>
+                <circle cx="415" cy="280" r="4" fill="url(#jewelGold)"/>
+                <circle cx="435" cy="285" r="4" fill="url(#jewelGold)"/>
+
+                <!-- Delicate Lotus Fingers -->
+                <!-- Left hand fingers on flute holes -->
+                <ellipse cx="412" cy="275" rx="4" ry="7" fill="url(#krishnaSkin)" transform="rotate(-20 412 275)"/>
+                <ellipse cx="422" cy="278" rx="4" ry="7" fill="url(#krishnaSkin)" transform="rotate(-15 422 278)"/>
+                <ellipse cx="432" cy="282" rx="4" ry="7" fill="url(#krishnaSkin)" transform="rotate(-10 432 282)"/>
+
+                <!-- 9. Golden Bansuri (Flute) -->
+                <g>
+                    <!-- Flute Shadow & Body -->
+                    <line x1="330" y1="245" x2="525" y2="305" stroke="#78350F" stroke-width="8" stroke-linecap="round"/>
+                    <line x1="330" y1="245" x2="525" y2="305" stroke="url(#jewelGold)" stroke-width="6.5" stroke-linecap="round"/>
+                    <!-- Flute Holes & Details -->
+                    <circle cx="395" cy="265" r="2" fill="#451A03"/>
+                    <circle cx="420" cy="273" r="2" fill="#451A03"/>
+                    <circle cx="445" cy="280" r="2" fill="#451A03"/>
+                    <circle cx="470" cy="288" r="2" fill="#451A03"/>
+                    <circle cx="495" cy="296" r="2" fill="#451A03"/>
+                    <!-- Jeweled Rings on Flute -->
+                    <line x1="340" y1="246" x2="343" y2="251" stroke="#EF4444" stroke-width="3"/>
+                    <line x1="510" y1="298" x2="513" y2="303" stroke="#EF4444" stroke-width="3"/>
+                    <!-- Dangling Silk Tassels -->
+                    <path d="M 522 304 Q 528 325 532 345" stroke="#EF4444" stroke-width="2" fill="none"/>
+                    <circle cx="532" cy="347" r="3.5" fill="url(#jewelGold)"/>
+                </g>
+
+                <!-- Radiant Sound Aura from the Flute Edge -->
+                <circle class="flute-aura" cx="525" cy="305" r="18" fill="url(#divineHalo)" opacity="0.8"/>
+                <circle class="flute-aura" cx="525" cy="305" r="34" stroke="#FDE047" stroke-width="1.2" stroke-dasharray="3 4" opacity="0.6"/>
+
+                <!-- 10. Golden Mukut (Crown) -->
+                <g>
+                    <!-- Crown Base Band -->
+                    <path d="M 380 185 Q 410 178 440 185 L 442 172 Q 410 162 378 172 Z" fill="url(#jewelGold)"/>
+                    <circle cx="410" cy="174" r="3.5" fill="#EF4444"/>
+                    <!-- Tiered Crown Filigree -->
+                    <path d="M 385 172 L 400 135 L 410 115 L 420 135 L 435 172 Z" fill="url(#jewelGold)"/>
+                    <path d="M 395 170 Q 410 130 425 170" stroke="#78350F" stroke-width="1.2" fill="none"/>
+                    <!-- Crown Jewels -->
+                    <circle cx="410" cy="140" r="4" fill="#3B82F6"/>
+                    <circle cx="410" cy="122" r="3" fill="#10B981"/>
+                    <circle cx="400" cy="155" r="2.5" fill="#EF4444"/>
+                    <circle cx="420" cy="155" r="2.5" fill="#EF4444"/>
+                </g>
+
+                <!-- 11. Shimmering Peacock Feather (Mayur Pankh) -->
+                <g class="feather-group">
+                    <!-- Stem -->
+                    <path d="M 405 130 Q 380 80 345 35" stroke="#A3E635" stroke-width="2.5" fill="none"/>
+                    <!-- Feather Barbules (outer fan) -->
+                    <path d="M 345 35 C 320 20 295 45 315 75 C 335 105 385 110 405 130 C 390 100 375 50 345 35 Z" fill="#047857" opacity="0.75"/>
+                    <path d="M 345 35 C 365 20 395 45 385 75 C 375 105 385 110 405 130 C 390 100 375 50 345 35 Z" fill="#065F46" opacity="0.6"/>
+                    <!-- Feather Eyes (Concentric Iridescent Layers) -->
+                    <ellipse cx="340" cy="55" rx="22" ry="28" fill="url(#jewelGold)" transform="rotate(-25 340 55)"/>
+                    <ellipse cx="340" cy="55" rx="17" ry="22" fill="#047857" transform="rotate(-25 340 55)"/>
+                    <ellipse cx="340" cy="55" rx="12" ry="16" fill="#0284C7" transform="rotate(-25 340 55)"/>
+                    <ellipse cx="340" cy="55" rx="8" ry="11" fill="url(#featherEye)" transform="rotate(-25 340 55)"/>
+                    <circle cx="338" cy="52" r="3.5" fill="#38BDF8"/>
+                </g>
+
+            </g>
+
+            <!-- ================= ENCHANTED BOTANICAL GARDEN ================= -->
+
+            <!-- Group A: Left Sunflowers (Tall, moonlit golden blooms) -->
+            <g class="sway-left" id="sunflower-left">
+                <!-- Stalk 1 -->
+                <path d="M 80 800 Q 110 650 140 530" stroke="#064E3B" stroke-width="7" fill="none"/>
+                <!-- Leaves -->
+                <path d="M 105 690 Q 50 670 40 710 Q 90 730 115 685" fill="#047857"/>
+                <path d="M 125 610 Q 190 590 195 640 Q 140 645 125 610" fill="#047857"/>
+                <!-- Sunflower Head -->
+                <g transform="translate(140, 530)">
+                    <!-- Outer Golden Petals -->
+                    <g>
+                        <ellipse cx="0" cy="-45" rx="12" ry="32" fill="url(#sunPetal)"/>
+                        <ellipse cx="32" cy="-32" rx="12" ry="32" fill="url(#sunPetal)" transform="rotate(45 32 -32)"/>
+                        <ellipse cx="45" cy="0" rx="12" ry="32" fill="url(#sunPetal)" transform="rotate(90 45 0)"/>
+                        <ellipse cx="32" cy="32" rx="12" ry="32" fill="url(#sunPetal)" transform="rotate(135 32 32)"/>
+                        <ellipse cx="0" cy="45" rx="12" ry="32" fill="url(#sunPetal)"/>
+                        <ellipse cx="-32" cy="32" rx="12" ry="32" fill="url(#sunPetal)" transform="rotate(225 -32 32)"/>
+                        <ellipse cx="-45" cy="0" rx="12" ry="32" fill="url(#sunPetal)" transform="rotate(270 -45 0)"/>
+                        <ellipse cx="-32" cy="-32" rx="12" ry="32" fill="url(#sunPetal)" transform="rotate(315 -32 -32)"/>
+                    </g>
+                    <!-- Sunflower Velvet Core -->
+                    <circle cx="0" cy="0" r="32" fill="url(#sunflowerEye)"/>
+                    <circle cx="0" cy="0" r="28" stroke="#FBBF24" stroke-width="1.5" stroke-dasharray="2 3" fill="none" opacity="0.65"/>
+                </g>
+
+                <!-- Stalk 2 (Second Sunflower) -->
+                <path d="M 190 800 Q 210 680 235 590" stroke="#064E3B" stroke-width="6" fill="none"/>
+                <g transform="translate(235, 590) scale(0.75)">
+                    <g>
+                        <ellipse cx="0" cy="-40" rx="10" ry="28" fill="url(#sunPetal)"/>
+                        <ellipse cx="28" cy="-28" rx="10" ry="28" fill="url(#sunPetal)" transform="rotate(45 28 -28)"/>
+                        <ellipse cx="40" cy="0" rx="10" ry="28" fill="url(#sunPetal)" transform="rotate(90 40 0)"/>
+                        <ellipse cx="28" cy="28" rx="10" ry="28" fill="url(#sunPetal)" transform="rotate(135 28 28)"/>
+                        <ellipse cx="0" cy="40" rx="10" ry="28" fill="url(#sunPetal)"/>
+                        <ellipse cx="-28" cy="28" rx="10" ry="28" fill="url(#sunPetal)" transform="rotate(225 -28 28)"/>
+                        <ellipse cx="-40" cy="0" rx="10" ry="28" fill="url(#sunPetal)" transform="rotate(270 -40 0)"/>
+                        <ellipse cx="-28" cy="-28" rx="10" ry="28" fill="url(#sunPetal)" transform="rotate(315 -28 -28)"/>
+                    </g>
+                    <circle cx="0" cy="0" r="26" fill="url(#sunflowerEye)"/>
+                </g>
+            </g>
+
+            <!-- Group B: Right Sunflowers -->
+            <g class="sway-right" id="sunflower-right">
+                <path d="M 880 800 Q 860 660 830 520" stroke="#064E3B" stroke-width="7" fill="none"/>
+                <path d="M 855 680 Q 910 650 920 700 Q 875 720 850 675" fill="#047857"/>
+                <g transform="translate(830, 520) scale(1.05)">
+                    <g>
+                        <ellipse cx="0" cy="-45" rx="12" ry="32" fill="url(#sunPetal)"/>
+                        <ellipse cx="32" cy="-32" rx="12" ry="32" fill="url(#sunPetal)" transform="rotate(45 32 -32)"/>
+                        <ellipse cx="45" cy="0" rx="12" ry="32" fill="url(#sunPetal)" transform="rotate(90 45 0)"/>
+                        <ellipse cx="32" cy="32" rx="12" ry="32" fill="url(#sunPetal)" transform="rotate(135 32 32)"/>
+                        <ellipse cx="0" cy="45" rx="12" ry="32" fill="url(#sunPetal)"/>
+                        <ellipse cx="-32" cy="32" rx="12" ry="32" fill="url(#sunPetal)" transform="rotate(225 -32 32)"/>
+                        <ellipse cx="-45" cy="0" rx="12" ry="32" fill="url(#sunPetal)" transform="rotate(270 -45 0)"/>
+                        <ellipse cx="-32" cy="-32" rx="12" ry="32" fill="url(#sunPetal)" transform="rotate(315 -32 -32)"/>
+                    </g>
+                    <circle cx="0" cy="0" r="32" fill="url(#sunflowerEye)"/>
+                    <circle cx="0" cy="0" r="28" stroke="#FBBF24" stroke-width="1.5" stroke-dasharray="2 3" fill="none" opacity="0.65"/>
+                </g>
+            </g>
+
+            <!-- Group C: Deep Crimson Velvet Roses (Foreground Left & Right) -->
+            <g class="sway-right">
+                <!-- Left Rose Bush -->
+                <path d="M 230 800 Q 240 730 270 670" stroke="#022C22" stroke-width="4.5" fill="none"/>
+                <!-- Velvet Rose 1 -->
+                <g transform="translate(270, 670)">
+                    <circle cx="0" cy="0" r="24" fill="url(#roseRed)"/>
+                    <path d="M -12 -12 Q 0 -22 12 -12 Q 22 0 12 12 Q 0 22 -12 12 Q -22 0 -12 -12" fill="#E11D48"/>
+                    <path d="M -6 -6 Q 0 -14 6 -6 Q 12 0 6 6 Q 0 12 -6 6 Q -12 0 -6 -6" fill="#FDA4AF" opacity="0.8"/>
+                    <!-- Moonlit dewdrop glint -->
+                    <circle cx="8" cy="-8" r="2.2" fill="#FFFFFF" opacity="0.9"/>
+                </g>
+
+                <!-- Left Rose 2 -->
+                <path d="M 160 800 Q 150 760 175 720" stroke="#022C22" stroke-width="3.5" fill="none"/>
+                <g transform="translate(175, 720) scale(0.8)">
+                    <circle cx="0" cy="0" r="24" fill="url(#roseRed)"/>
+                    <path d="M -10 -10 Q 0 -18 10 -10 Q 18 0 10 10 Q 0 18 -10 10 Q -18 0 -10 -10" fill="#E11D48"/>
+                    <circle cx="6" cy="-6" r="2" fill="#FFFFFF" opacity="0.9"/>
+                </g>
+            </g>
+
+            <g class="sway-left">
+                <!-- Right Rose Bush -->
+                <path d="M 740 800 Q 730 720 705 660" stroke="#022C22" stroke-width="4.5" fill="none"/>
+                <g transform="translate(705, 660)">
+                    <circle cx="0" cy="0" r="25" fill="url(#roseRed)"/>
+                    <path d="M -12 -12 Q 0 -22 12 -12 Q 22 0 12 12 Q 0 22 -12 12 Q -22 0 -12 -12" fill="#E11D48"/>
+                    <path d="M -6 -6 Q 0 -14 6 -6 Q 12 0 6 6 Q 0 12 -6 6 Q -12 0 -6 -6" fill="#FDA4AF" opacity="0.85"/>
+                    <circle cx="9" cy="-7" r="2.5" fill="#FFFFFF" opacity="0.9"/>
+                </g>
+            </g>
+
+            <!-- Group D: Wildflowers & Meadow Grasses (Daisies, Bluebells & Glowing Florets) -->
+            <g id="wildflowers-layer">
+                <!-- Bellflowers / Chamomile scattered -->
+                <g transform="translate(320, 720)">
+                    <path d="M 0 80 L 0 0" stroke="#065F46" stroke-width="2"/>
+                    <circle cx="-7" cy="0" r="5" fill="#E0E7FF"/>
+                    <circle cx="7" cy="0" r="5" fill="#E0E7FF"/>
+                    <circle cx="0" cy="-7" r="5" fill="#E0E7FF"/>
+                    <circle cx="0" cy="7" r="5" fill="#E0E7FF"/>
+                    <circle cx="0" cy="0" r="4" fill="#FDE047"/>
+                </g>
+
+                <g transform="translate(480, 735) scale(0.85)">
+                    <path d="M 0 65 L 0 0" stroke="#065F46" stroke-width="2"/>
+                    <circle cx="-7" cy="0" r="5" fill="#C084FC"/>
+                    <circle cx="7" cy="0" r="5" fill="#C084FC"/>
+                    <circle cx="0" cy="-7" r="5" fill="#C084FC"/>
+                    <circle cx="0" cy="7" r="5" fill="#C084FC"/>
+                    <circle cx="0" cy="0" r="4" fill="#FDE047"/>
+                </g>
+
+                <g transform="translate(620, 715)">
+                    <path d="M 0 85 L 0 0" stroke="#065F46" stroke-width="2"/>
+                    <circle cx="-6" cy="0" r="5" fill="#67E8F9"/>
+                    <circle cx="6" cy="0" r="5" fill="#67E8F9"/>
+                    <circle cx="0" cy="-6" r="5" fill="#67E8F9"/>
+                    <circle cx="0" cy="6" r="5" fill="#67E8F9"/>
+                    <circle cx="0" cy="0" r="3.5" fill="#FFFFFF"/>
+                </g>
+
+                <g transform="translate(560, 745) scale(0.9)">
+                    <path d="M 0 55 L 0 0" stroke="#065F46" stroke-width="2"/>
+                    <circle cx="-6" cy="0" r="5" fill="#FDA4AF"/>
+                    <circle cx="6" cy="0" r="5" fill="#FDA4AF"/>
+                    <circle cx="0" cy="-6" r="5" fill="#FDA4AF"/>
+                    <circle cx="0" cy="6" r="5" fill="#FDA4AF"/>
+                    <circle cx="0" cy="0" r="3.5" fill="#FDE047"/>
+                </g>
+
+                <!-- Soft blades of night grass lining bottom -->
+                <path d="M 50 800 L 70 750 M 90 800 L 105 760 M 340 800 L 350 765 M 650 800 L 665 755 M 780 800 L 795 750" stroke="#047857" stroke-width="2.5" stroke-linecap="round"/>
+            </g>
+        </svg>
+    </div>
+
+    <!-- Dynamic Elements: Fireflies, Falling Petals, Sound Rings, Moon Halo -->
+    <canvas id="canvas-fg"></canvas>
+
+    <script>
+        // Canvas Setup
+        const bgCanvas = document.getElementById('canvas-bg');
+        const bgCtx = bgCanvas.getContext('2d');
+        const fgCanvas = document.getElementById('canvas-fg');
+        const fgCtx = fgCanvas.getContext('2d');
+
+        let width, height;
+        let mouse = { x: -1000, y: -1000 };
+
+        function resize() {
+            width = bgCanvas.width = fgCanvas.width = window.innerWidth;
+            height = bgCanvas.height = fgCanvas.height = window.innerHeight;
+            initStars();
+            initPetals();
+            initFireflies();
+        }
+        window.addEventListener('resize', resize);
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        // 1. Starfield & Cosmic Mist
+        let stars = [];
+        let shootingStars = [];
+
+        function initStars() {
+            stars = [];
+            const count = Math.floor((width * height) / 3000);
+            for (let i = 0; i < count; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * (height * 0.75),
+                    radius: Math.random() * 1.5 + 0.3,
+                    alpha: Math.random(),
+                    speed: Math.random() * 0.025 + 0.008,
+                    twinkleDir: Math.random() > 0.5 ? 1 : -1,
+                    hue: Math.random() > 0.35 ? '#bae6fd' : '#fef08a'
+                });
+            }
+        }
+
+        function createShootingStar() {
+            if (shootingStars.length < 2 && Math.random() < 0.02) {
+                shootingStars.push({
+                    x: Math.random() * width * 0.7,
+                    y: Math.random() * height * 0.35,
+                    len: Math.random() * 90 + 60,
+                    speed: Math.random() * 7 + 8,
+                    angle: Math.PI / 4 + (Math.random() * 0.2 - 0.1),
+                    opacity: 1
+                });
+            }
+        }
+
+        // 2. Falling Celestial Lotus & Rose Petals
+        let petals = [];
+        function initPetals() {
+            petals = [];
+            for (let i = 0; i < 30; i++) {
+                petals.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: Math.random() * 6 + 5,
+                    speedY: Math.random() * 0.8 + 0.5,
+                    speedX: Math.random() * 0.8 - 0.2,
+                    rotation: Math.random() * Math.PI * 2,
+                    rotSpeed: (Math.random() - 0.5) * 0.03,
+                    color: Math.random() > 0.5 ? '#fda4af' : '#fde047',
+                    alpha: Math.random() * 0.5 + 0.4
+                });
+            }
+        }
+
+        // 3. Fireflies (Jugnu)
+        let fireflies = [];
+        function initFireflies() {
+            fireflies = [];
+            for (let i = 0; i < 40; i++) {
+                fireflies.push({
+                    x: Math.random() * width,
+                    y: height * 0.45 + Math.random() * (height * 0.55),
+                    vx: (Math.random() - 0.5) * 0.8,
+                    vy: (Math.random() - 0.5) * 0.8,
+                    radius: Math.random() * 2 + 1.2,
+                    glowPhase: Math.random() * Math.PI,
+                    color: Math.random() > 0.5 ? '253, 224, 71' : '103, 232, 249'
+                });
+            }
+        }
+
+        // 4. Divine Music Rings emitted from the Bansuri
+        let musicRings = [];
+        function triggerMusicRing() {
+            if (Math.random() < 0.04) {
+                // Approximate flute tip coordinates relative to viewport
+                const fluteX = width * 0.5 + 20;
+                const fluteY = height * 0.5 - 20;
+                musicRings.push({
+                    x: fluteX,
+                    y: fluteY,
+                    radius: 5,
+                    maxRadius: 160,
+                    alpha: 0.85
+                });
+            }
+        }
+
+        // RENDER: Background (Sky, Moon, Nebula)
+        function renderBackground() {
+            bgCtx.clearRect(0, 0, width, height);
+
+            // Deep Twilight Sky Gradient
+            const skyGrad = bgCtx.createLinearGradient(0, 0, 0, height);
+            skyGrad.addColorStop(0, '#02040b');
+            skyGrad.addColorStop(0.35, '#050c22');
+            skyGrad.addColorStop(0.7, '#0a1738');
+            skyGrad.addColorStop(1, '#030814');
+            bgCtx.fillStyle = skyGrad;
+            bgCtx.fillRect(0, 0, width, height);
+
+            // Luminous Moon in upper right
+            const moonX = width * 0.82;
+            const moonY = height * 0.22;
+            const moonRadius = 45;
+
+            // Moonlight Halo
+            const moonHalo = bgCtx.createRadialGradient(moonX, moonY, moonRadius * 0.5, moonX, moonY, 320);
+            moonHalo.addColorStop(0, 'rgba(186, 230, 253, 0.35)');
+            moonHalo.addColorStop(0.4, 'rgba(96, 165, 250, 0.12)');
+            moonHalo.addColorStop(1, 'rgba(2, 4, 11, 0)');
+            bgCtx.fillStyle = moonHalo;
+            bgCtx.beginPath();
+            bgCtx.arc(moonX, moonY, 320, 0, Math.PI * 2);
+            bgCtx.fill();
+
+            // Moon Disc
+            const moonDisc = bgCtx.createRadialGradient(moonX - 10, moonY - 10, 4, moonX, moonY, moonRadius);
+            moonDisc.addColorStop(0, '#ffffff');
+            moonDisc.addColorStop(0.8, '#e0f2fe');
+            moonDisc.addColorStop(1, '#bae6fd');
+            bgCtx.fillStyle = moonDisc;
+            bgCtx.beginPath();
+            bgCtx.arc(moonX, moonY, moonRadius, 0, Math.PI * 2);
+            bgCtx.fill();
+
+            // Stars
+            for (let s of stars) {
+                s.alpha += s.speed * s.twinkleDir;
+                if (s.alpha > 1) { s.alpha = 1; s.twinkleDir = -1; }
+                else if (s.alpha < 0.2) { s.alpha = 0.2; s.twinkleDir = 1; }
+
+                bgCtx.fillStyle = s.hue;
+                bgCtx.globalAlpha = s.alpha;
+                bgCtx.beginPath();
+                bgCtx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+                bgCtx.fill();
+            }
+            bgCtx.globalAlpha = 1;
+
+            // Shooting Stars
+            createShootingStar();
+            for (let i = shootingStars.length - 1; i >= 0; i--) {
+                let st = shootingStars[i];
+                st.x += Math.cos(st.angle) * st.speed;
+                st.y += Math.sin(st.angle) * st.speed;
+                st.opacity -= 0.018;
+
+                if (st.opacity <= 0) {
+                    shootingStars.splice(i, 1);
+                    continue;
+                }
+
+                bgCtx.strokeStyle = `rgba(224, 242, 254, ${st.opacity})`;
+                bgCtx.lineWidth = 1.6;
+                bgCtx.beginPath();
+                bgCtx.moveTo(st.x, st.y);
+                bgCtx.lineTo(st.x - Math.cos(st.angle) * st.len, st.y - Math.sin(st.angle) * st.len);
+                bgCtx.stroke();
+            }
+        }
+
+        // RENDER: Foreground (Music waves, Falling Petals, Fireflies)
+        function renderForeground() {
+            fgCtx.clearRect(0, 0, width, height);
+
+            // 1. Divine Sound Waves from Bansuri
+            triggerMusicRing();
+            for (let i = musicRings.length - 1; i >= 0; i--) {
+                const r = musicRings[i];
+                r.radius += 1.2;
+                r.alpha -= 0.007;
+
+                if (r.alpha <= 0 || r.radius >= r.maxRadius) {
+                    musicRings.splice(i, 1);
+                    continue;
+                }
+
+                fgCtx.strokeStyle = `rgba(253, 224, 71, ${r.alpha})`;
+                fgCtx.lineWidth = 1.2;
+                fgCtx.beginPath();
+                fgCtx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
+                fgCtx.stroke();
+            }
+
+            // 2. Falling Petals
+            for (let p of petals) {
+                p.y += p.speedY;
+                p.x += Math.sin(p.y * 0.015) + p.speedX;
+                p.rotation += p.rotSpeed;
+
+                if (p.y > height) {
+                    p.y = -20;
+                    p.x = Math.random() * width;
+                }
+
+                fgCtx.save();
+                fgCtx.translate(p.x, p.y);
+                fgCtx.rotate(p.rotation);
+                fgCtx.fillStyle = p.color;
+                fgCtx.globalAlpha = p.alpha;
+                fgCtx.beginPath();
+                fgCtx.ellipse(0, 0, p.size, p.size * 0.5, 0, 0, Math.PI * 2);
+                fgCtx.fill();
+                fgCtx.restore();
+            }
+            fgCtx.globalAlpha = 1;
+
+            // 3. Fireflies with soft interactive avoidance
+            for (let f of fireflies) {
+                f.x += f.vx;
+                f.y += f.vy;
+                f.glowPhase += 0.035;
+
+                if (f.x < 0) f.x = width;
+                if (f.x > width) f.x = 0;
+                if (f.y < height * 0.4) f.y = height * 0.95;
+                if (f.y > height) f.y = height * 0.45;
+
+                // Gentle mouse repulsion
+                const dx = f.x - mouse.x;
+                const dy = f.y - mouse.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 90) {
+                    f.x += (dx / dist) * 2;
+                    f.y += (dy / dist) * 2;
+                }
+
+                const brightness = (Math.sin(f.glowPhase) + 1) / 2 * 0.8 + 0.2;
+                fgCtx.fillStyle = `rgba(${f.color}, ${brightness})`;
+                fgCtx.shadowColor = `rgba(${f.color}, 1)`;
+                fgCtx.shadowBlur = 10;
+                fgCtx.beginPath();
+                fgCtx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
+                fgCtx.fill();
+                fgCtx.shadowBlur = 0; // reset
+            }
+        }
+
+        // Main Animation Loop
+        function loop() {
+            renderBackground();
+            renderForeground();
+            requestAnimationFrame(loop);
+        }
+
+        resize();
+        loop();
+    </script>
+</body>
+</html>
